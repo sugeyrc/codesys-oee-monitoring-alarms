@@ -1,0 +1,564 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP22 Patch 4" creationDateTime="2026-11-25T19:55:05.8161627" />
+  <contentHeader name="OEE_Alarms_RECOVERED_2026-11-25T18-32-08.project" modificationDateTime="2026-11-25T19:01:16.7797252">
+    <coordinateInfo>
+      <fbd>
+        <scaling x="1" y="1" />
+      </fbd>
+      <ld>
+        <scaling x="1" y="1" />
+      </ld>
+      <sfc>
+        <scaling x="1" y="1" />
+      </sfc>
+    </coordinateInfo>
+    <addData>
+      <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
+        <ProjectInformation />
+      </data>
+    </addData>
+  </contentHeader>
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations />
+  </instances>
+  <addData>
+    <data name="http://www.3s-software.com/plcopenxml/application" handleUnknown="implementation">
+      <resource name="Application">
+        <task name="MainTask" interval="PT0.02S" priority="1">
+          <pouInstance name="PLC_PRG" typeName="">
+            <documentation>
+              <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+            </documentation>
+          </pouInstance>
+          <addData>
+            <data name="http://www.3s-software.com/plcopenxml/tasksettings" handleUnknown="implementation">
+              <TaskSettings KindOfTask="Cyclic" Interval="t#20ms" IntervalUnit="ms" WithinSPSTimeSlicing="true">
+                <Watchdog Enabled="false" TimeUnit="ms" Sensitivity="1" />
+              </TaskSettings>
+            </data>
+            <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+              <ObjectId>4334088c-34b7-48fa-a833-360f332db190</ObjectId>
+            </data>
+          </addData>
+        </task>
+        <task name="VISU_TASK" interval="PT0.1S" priority="31">
+          <pouInstance name="VisuElems.Visu_Prg" typeName="">
+            <documentation>
+              <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+            </documentation>
+          </pouInstance>
+          <addData>
+            <data name="http://www.3s-software.com/plcopenxml/tasksettings" handleUnknown="implementation">
+              <TaskSettings KindOfTask="Cyclic" Interval="100" IntervalUnit="ms" WithinSPSTimeSlicing="true">
+                <Watchdog Enabled="false" TimeUnit="ms" />
+              </TaskSettings>
+            </data>
+            <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+              <ObjectId>cc4742b6-4fce-4d55-a54e-e8e2c5373649</ObjectId>
+            </data>
+          </addData>
+        </task>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/datatype" handleUnknown="implementation">
+            <dataType name="ST_MetricasLinea">
+              <baseType>
+                <struct>
+                  <variable name="Piezas_OK">
+                    <type>
+                      <INT />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">cContadores de produccion</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Piezas_Malas">
+                    <type>
+                      <INT />
+                    </type>
+                  </variable>
+                  <variable name="Total_Fallas">
+                    <type>
+                      <INT />
+                    </type>
+                  </variable>
+                  <variable name="Tiempo_Ciclo_Seg">
+                    <type>
+                      <REAL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Tiempos acumulados y ciclos</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Tiempo_Ciclo_Ideal_Seg">
+                    <type>
+                      <REAL />
+                    </type>
+                    <initialValue>
+                      <simpleValue value="2.0" />
+                    </initialValue>
+                  </variable>
+                  <variable name="Tiempo_Total_Seg">
+                    <type>
+                      <REAL />
+                    </type>
+                  </variable>
+                  <variable name="Tiempo_Paro_Seg">
+                    <type>
+                      <REAL />
+                    </type>
+                  </variable>
+                  <variable name="Disponibilidad_PCT">
+                    <type>
+                      <REAL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Indicadores OEE porcentaje 0.0-100.0%</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Rendimiento_PCT">
+                    <type>
+                      <REAL />
+                    </type>
+                  </variable>
+                  <variable name="Calidad_PCT">
+                    <type>
+                      <REAL />
+                    </type>
+                  </variable>
+                  <variable name="OEE_PCT">
+                    <type>
+                      <REAL />
+                    </type>
+                  </variable>
+                </struct>
+              </baseType>
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                  <ObjectId>d3578fa6-b958-4b23-bc14-d1c5cf93e720</ObjectId>
+                </data>
+              </addData>
+            </dataType>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/pou" handleUnknown="implementation">
+            <pou name="PLC_PRG" pouType="program">
+              <interface>
+                <localVars>
+                  <variable name="Linea_ON">
+                    <type>
+                      <BOOL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Interriptor general de turno</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Sensor_Entrada">
+                    <type>
+                      <BOOL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Llega ieza nueva a la estacion</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Sensor_Salida_OK">
+                    <type>
+                      <BOOL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Pieza buena</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Sensor_Salida_Scrap">
+                    <type>
+                      <BOOL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Pieza mala</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Falla_Atasco">
+                    <type>
+                      <BOOL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Simuladores</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Falla_Material">
+                    <type>
+                      <BOOL />
+                    </type>
+                  </variable>
+                  <variable name="Reset_Falla">
+                    <type>
+                      <BOOL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Restablece celda</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Metricas">
+                    <type>
+                      <derived name="ST_MetricasLinea" />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Metricas y bloque de historial</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Historial">
+                    <type>
+                      <derived name="FB_HistorialFallas" />
+                    </type>
+                  </variable>
+                  <variable name="Reloj_1s">
+                    <type>
+                      <derived name="TON" />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Para medir segundos de turno y paro</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Reloj_Tiempo_Ciclo">
+                    <type>
+                      <derived name="TON" />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Mide tiempo desde Sensor_Entrada hasta Sensor_Salida</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Flanco_Entrada">
+                    <type>
+                      <derived name="R_TRIG" />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Detectores de flanco</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Flanco_OK">
+                    <type>
+                      <derived name="R_TRIG" />
+                    </type>
+                  </variable>
+                  <variable name="Flanco_Scrap">
+                    <type>
+                      <derived name="R_TRIG" />
+                    </type>
+                  </variable>
+                  <variable name="Flanco_Atasco">
+                    <type>
+                      <derived name="R_TRIG" />
+                    </type>
+                  </variable>
+                  <variable name="Flanco_Material">
+                    <type>
+                      <derived name="R_TRIG" />
+                    </type>
+                  </variable>
+                  <variable name="Pieza_en_Proceso">
+                    <type>
+                      <BOOL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Variables de estado </xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Falla_Activa">
+                    <type>
+                      <BOOL />
+                    </type>
+                  </variable>
+                  <variable name="Mensaje_Falla_Actual">
+                    <type>
+                      <string length="40" />
+                    </type>
+                  </variable>
+                  <variable name="Maquina_Corriendo">
+                    <type>
+                      <BOOL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Verde</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Falla_Paro">
+                    <type>
+                      <BOOL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Rojo</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Material_Proceso">
+                    <type>
+                      <BOOL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Azul</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Alerta_Scrap">
+                    <type>
+                      <BOOL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Amarillo</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Disparar_Registro">
+                    <type>
+                      <BOOL />
+                    </type>
+                  </variable>
+                  <variable name="Piezas_Totales">
+                    <type>
+                      <INT />
+                    </type>
+                  </variable>
+                  <variable name="Tiempo_Operativo_Seg">
+                    <type>
+                      <REAL />
+                    </type>
+                  </variable>
+                </localVars>
+              </interface>
+              <body>
+                <ST>
+                  <xhtml xmlns="http://www.w3.org/1999/xhtml">//Estado de la maquina
+Maquina_Corriendo := Linea_ON AND NOT Falla_Activa;
+Falla_Paro := Falla_Activa;
+
+Reloj_1s(IN := Linea_ON AND NOT Reloj_1s.Q, PT := T#1S);
+
+IF Reloj_1s.Q THEN
+	Metricas.Tiempo_Total_Seg := Metricas.Tiempo_Total_Seg + 1.0;
+	IF Falla_Activa THEN
+		Metricas.Tiempo_Paro_Seg := Metricas.Tiempo_Paro_Seg + 1.0;
+	END_IF;
+END_IF;
+ 
+//Tiempo ciclo y conteo de piezas
+Flanco_Entrada(CLK := Sensor_Entrada);
+Flanco_OK(CLK := Sensor_Salida_OK);
+Flanco_Scrap(CLK := Sensor_Salida_Scrap);
+//Pieza nueva
+IF Flanco_Entrada.Q AND Maquina_Corriendo AND NOT Pieza_en_Proceso THEN
+    Pieza_en_Proceso := TRUE;
+END_IF; 
+//Temporizador para el tiempo de maquinado de la pieza
+Reloj_Tiempo_Ciclo(IN := Pieza_en_Proceso AND Material_Proceso, PT := T#60S);
+Material_Proceso := Pieza_en_Proceso;
+
+//Material OK
+IF Flanco_OK.Q AND Pieza_en_Proceso THEN
+	Metricas.Tiempo_Ciclo_Seg := TIME_TO_REAL(Reloj_Tiempo_Ciclo.ET)/1000.0;
+	Metricas.Piezas_OK  := Metricas.Piezas_OK + 1;
+	Pieza_en_Proceso := FALSE;
+	Alerta_Scrap := FALSE;	
+END_IF;
+//Material scrap
+IF Flanco_Scrap.Q AND Pieza_en_Proceso THEN
+	Metricas.Tiempo_Ciclo_Seg := TIME_TO_REAL(Reloj_Tiempo_Ciclo.ET)/1000.0;
+	Metricas.Piezas_Malas := Metricas.Piezas_Malas +1;
+	Pieza_en_Proceso := FALSE;
+	Alerta_Scrap := TRUE;
+END_IF;
+
+//Indicadores oee
+Piezas_Totales := Metricas.Piezas_OK  + Metricas.Piezas_Malas;
+Tiempo_Operativo_Seg := Metricas.Tiempo_Total_Seg - Metricas.Tiempo_Paro_Seg;
+
+//Calculos de disponibilidad
+IF Metricas.Tiempo_Total_Seg &gt; 0.0 THEN
+	Metricas.Disponibilidad_PCT := (Tiempo_Operativo_Seg / Metricas.Tiempo_Total_Seg)*100.0;
+ELSE
+	Metricas.Disponibilidad_PCT := 0.0;
+END_IF;
+
+//Calculos de rendimimiento
+IF Tiempo_Operativo_Seg &gt; 0.0 THEN
+	Metricas.Rendimiento_PCT := ((INT_TO_REAL(Piezas_Totales) * Metricas.Tiempo_Ciclo_Ideal_Seg) / (Tiempo_Operativo_Seg)) *100.0;
+	IF Metricas.Rendimiento_PCT &gt; 100.0 THEN Metricas.Rendimiento_PCT := 100.0; END_IF;
+ELSE
+    Metricas.Rendimiento_PCT := 0.0;	
+END_IF;
+
+//Calculos de calidad
+IF Piezas_Totales &gt; 0 THEN
+	Metricas.Calidad_PCT := (INT_TO_REAL(Metricas.Piezas_OK) / INT_TO_REAL(Piezas_Totales));
+ELSE
+    Metricas.Calidad_PCT := 0.0;	
+END_IF;
+
+//OEE Global
+Metricas.OEE_PCT := (Metricas.Disponibilidad_PCT * Metricas.Rendimiento_PCT * Metricas.Calidad_PCT) / 10000.0;
+//Deteccion de flancos
+Flanco_Atasco(CLK := Falla_Atasco);
+Flanco_Material(CLK := Falla_Material);
+
+Disparar_Registro := FALSE;
+
+IF Flanco_Atasco.Q THEN
+	Falla_Activa := TRUE;
+	Metricas.Total_Fallas := Metricas.Total_Fallas + 1;
+    Mensaje_Falla_Actual := 'Falla 01: Atasco de banda';
+	Disparar_Registro := TRUE;
+ELSIF Flanco_Material.Q THEN
+    Falla_Activa := TRUE;
+    Metricas.Total_Fallas := Metricas.Total_Fallas +1;
+    Mensaje_Falla_Actual := 'Falla 02: Falla de material';
+	Disparar_Registro := TRUE; 
+END_IF;
+IF Reset_Falla AND NOT Falla_Atasco AND NOT Falla_Material THEN
+	Falla_Activa := FALSE;
+END_IF;
+
+Historial(
+	Registrar := Disparar_Registro,
+	Nueva_Falla := Mensaje_Falla_Actual
+);</xhtml>
+                </ST>
+              </body>
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                  <ObjectId>1c82518f-78cb-412f-86e8-f73eb2f9741d</ObjectId>
+                </data>
+              </addData>
+            </pou>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/pou" handleUnknown="implementation">
+            <pou name="FB_HistorialFallas" pouType="functionBlock">
+              <interface>
+                <inputVars>
+                  <variable name="Registrar">
+                    <type>
+                      <BOOL />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Agrega una nueva falla</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="Nueva_Falla">
+                    <type>
+                      <string length="40" />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Desdcripcion de falla</xhtml>
+                    </documentation>
+                  </variable>
+                </inputVars>
+                <outputVars>
+                  <variable name="Lista_Fallas">
+                    <type>
+                      <array>
+                        <dimension lower="1" upper="5" />
+                        <baseType>
+                          <string length="40" />
+                        </baseType>
+                      </array>
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">Acumula las fallas </xhtml>
+                    </documentation>
+                  </variable>
+                </outputVars>
+                <localVars>
+                  <variable name="Flanco_Registro">
+                    <type>
+                      <derived name="R_TRIG" />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml"> Evita que se dupliquen en el mismo ciclo(una sola lectura por ciclo)</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="i">
+                    <type>
+                      <INT />
+                    </type>
+                  </variable>
+                </localVars>
+              </interface>
+              <body>
+                <ST>
+                  <xhtml xmlns="http://www.w3.org/1999/xhtml">//Detectamos el instante exacto en que se pide registrar
+// Desplazamos las fallas anteriores
+IF Registrar THEN
+	FOR i := 5 TO 2 BY -1 DO
+		Lista_Fallas[i] := Lista_Fallas[i - 1];
+	END_FOR;
+	
+	// Guardamos la falla nueva en la primera posición
+	Lista_Fallas[1] := Nueva_Falla;
+END_IF;
+</xhtml>
+                </ST>
+              </body>
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                  <ObjectId>ae53666b-04b0-4c0e-ae7c-6cd4cf2af2a5</ObjectId>
+                </data>
+              </addData>
+            </pou>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/libraries" handleUnknown="implementation">
+            <Libraries>
+              <Library Name="#IoStandard" Namespace="IoStandard" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="true" DefaultResolution="IoStandard, 3.5.22.0 (System)" />
+              <Library Name="#3SLicense" Namespace="_3S_LICENSE" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="3SLicense, 0.0.0.0 (CODESYS)" ResolverGuid="97c3b452-d9fa-4ac2-9d0c-3d420aa6d95b" />
+              <Library Name="#CAA Device Diagnosis" Namespace="DED" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="CAA Device Diagnosis, 3.5.22.0 (CAA Technical Workgroup)" />
+              <Library Name="#Standard" Namespace="Standard" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="Standard, * (System)" />
+              <Library Name="#BreakpointLogging" Namespace="BPLog" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="Breakpoint Logging Functions, * (3S - Smart Software Solutions GmbH)" />
+              <Library Name="#System_VisuElems" Namespace="VisuElems" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElems, 4.10.0.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElemMeter" Namespace="VisuElemMeter" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElemMeter, 4.10.0.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElemsSpecialControls" Namespace="VisuElemsSpecialControls" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElemsSpecialControls, 4.7.0.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElemsWinControls" Namespace="VisuElemsWinControls" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElemsWinControls, 4.10.0.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElemTextEditor" Namespace="VisuElemTextEditor" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElemTextEditor, 4.8.0.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElemTrace" Namespace="VisuElemTrace" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElemTrace, 4.10.0.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuNativeControl" Namespace="VisuNativeControl" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuNativeControl, 4.9.0.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElemsAlarm" Namespace="VisuElemsAlarm" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElemsAlarm, 4.10.0.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElemCamDisplayer" Namespace="VisuElemCamDisplayer" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElemCamDisplayer, 4.7.0.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElem3DPath" Namespace="VisuElem3DPath" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElem3DPath, 4.7.0.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElemsDateTime" Namespace="VisuElemsDateTime" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElemsDateTime, 4.9.0.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElemXYChart" Namespace="VisuElemXYChart" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElemXYChart, 4.10.0.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuInputs" Namespace="VisuInputs" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuInputs, 4.7.0.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <PlaceholderRedirections>
+                <PlaceholderRedirection Placeholder="Standard" Redirection="Standard, 3.5.22.0 (System)" />
+                <PlaceholderRedirection Placeholder="Standard64" Redirection="Standard64, 3.5.20.0 (System)" />
+                <PlaceholderRedirection Placeholder="StringUtils" Redirection="StringUtils, 3.5.22.0 (System)" />
+                <PlaceholderRedirection Placeholder="Util" Redirection="Util, 3.5.22.0 (System)" />
+                <PlaceholderRedirection Placeholder="Collections" Redirection="Collections, 3.5.17.0 (System)" />
+              </PlaceholderRedirections>
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                  <ObjectId>22a85e00-1114-4ee4-9d14-c6e98a1a69c2</ObjectId>
+                </data>
+              </addData>
+            </Libraries>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/buildproperties" handleUnknown="implementation">
+            <BuildProperties>
+              <CompilerDefines>GENERATE_OVERLAY_VISU,VISU_USEPROPERTYINFO</CompilerDefines>
+            </BuildProperties>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>ed3ff2a4-db97-47a2-9cfb-da82d66def5e</ObjectId>
+          </data>
+        </addData>
+      </resource>
+    </data>
+    <data name="http://www.3s-software.com/plcopenxml/projectstructure" handleUnknown="discard">
+      <ProjectStructure>
+        <Object Name="Application" ObjectId="ed3ff2a4-db97-47a2-9cfb-da82d66def5e">
+          <Object Name="MainTask" ObjectId="4334088c-34b7-48fa-a833-360f332db190" />
+          <Object Name="VISU_TASK" ObjectId="cc4742b6-4fce-4d55-a54e-e8e2c5373649" />
+          <Object Name="PLC_PRG" ObjectId="1c82518f-78cb-412f-86e8-f73eb2f9741d" />
+          <Object Name="Administrador de bibliotecas" ObjectId="22a85e00-1114-4ee4-9d14-c6e98a1a69c2" />
+          <Object Name="FB_HistorialFallas" ObjectId="ae53666b-04b0-4c0e-ae7c-6cd4cf2af2a5" />
+          <Object Name="ST_MetricasLinea" ObjectId="d3578fa6-b958-4b23-bc14-d1c5cf93e720" />
+        </Object>
+      </ProjectStructure>
+    </data>
+  </addData>
+</project>
